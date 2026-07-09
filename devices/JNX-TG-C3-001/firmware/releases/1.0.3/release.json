@@ -1,0 +1,38 @@
+{
+  "pid": "JNX-TG-C3-001",
+  "firmwareName": "JNX-TG-C3",
+  "version": "1.0.3",
+  "displayVersion": "JNX-TG-C3 v1.0.3",
+  "buildDate": "2026-07-09",
+  "storage": {
+    "config": "NVS",
+    "logs": "LittleFS rotating logs"
+  },
+  "artifacts": [
+    {
+      "name": "bootloader.bin",
+      "relativePath": "bootloader.bin",
+      "sha256": "30D47AB1F344CFA69F6B2F718FFA72FC7BAEA6DB047EAABEFEA162DB29E6821C"
+    },
+    {
+      "name": "partitions.bin",
+      "relativePath": "partitions.bin",
+      "sha256": "FC22D7750C62B98EBC4A74AFC5AE33C47829E8691AD47B67A3B8705B29F9B941"
+    },
+    {
+      "name": "firmware.bin",
+      "relativePath": "firmware.bin",
+      "sha256": "7417FBBD9F8DA1ABA466C24C8299541C979357E7B23719C5843CAD59CD6CB1CD"
+    },
+    {
+      "name": "littlefs.bin",
+      "relativePath": "littlefs.bin",
+      "sha256": "B125ACDB25ACAC8AA5BC7E215E578DED476F16F44EE569BBD1A84CE419699956"
+    }
+  ],
+  "notes": [
+    "WiFi TX power floor is 8.5 dBm.",
+    "3-wire ultrasonic operation is supported with sensor TX on GPIO20.",
+    "Dynamic Jenix One UI package is tank-guard-mobile@1.0.0."
+  ]
+}

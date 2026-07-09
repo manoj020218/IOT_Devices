@@ -1,0 +1,30 @@
+{
+  "pid": "JNX-TG-C3-001",
+  "productName": "Smart Tank Guard by Jenix",
+  "category": "Water Monitoring",
+  "sku": "JNX-TG-A02YYUW-C3",
+  "hardwareRevision": "HW1.0",
+  "firmware": {
+    "name": "JNX-TG-C3",
+    "version": "1.0.3",
+    "displayVersion": "JNX-TG-C3 v1.0.3",
+    "buildDate": "2026-07-09"
+  },
+  "ui": {
+    "uiMode": "remote-package",
+    "uiPackageId": "tank-guard-mobile",
+    "uiPackageVersion": "1.0.0",
+    "templateId": "tank-guard-mobile-v1",
+    "dynamicPages": [
+      "tank-guard-mobile",
+      "thresholds",
+      "tank-level"
+    ]
+  },
+  "paths": {
+    "firmwareSource": "../firmware/source",
+    "firmwareRelease": "../firmware/releases/1.0.3",
+    "uiPackage": "../ui-packages/tank-guard-mobile/1.0.0",
+    "platformPlugin": "../platform-plugin/source"
+  }
+}

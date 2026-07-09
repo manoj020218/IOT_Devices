@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Tank Guard</title>
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Smart Tank Guard by Jenix</p>
+        <h1>TankGuard A02W Controller</h1>
+        <p class="hero-copy">Offline-first ESP32-C3 controller for DYP A02YYUW sensing, RF pulse control, MQTT telemetry, and OTA maintenance.</p>
+      </div>
+      <div class="status-strip">
+        <div><span>WiFi</span><strong id="wifiStatus">-</strong></div>
+        <div><span>MQTT</span><strong id="mqttStatus">-</strong></div>
+        <div><span>State</span><strong id="stateName">-</strong></div>
+      </div>
+    </header>
+
+    <section class="grid two">
+      <article class="panel">
+        <h2>Dashboard</h2>
+        <div class="kv-list" id="dashboard"></div>
+      </article>
+      <article class="panel">
+        <h2>Manual Test</h2>
+        <div class="button-row">
+          <button data-action="motor_on" class="primary">RF Motor ON</button>
+          <button data-action="motor_off">RF Motor OFF</button>
+          <button data-action="alarm_test">RF Alarm Pulse</button>
+        </div>
+        <label class="checkbox">
+          <input type="checkbox" id="manualOverride">
+          <span>Allow motor_on above top level</span>
+        </label>
+        <p class="hint">Motor state is always treated as assumed in this RF-only version.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Configuration</h2>
+      <form id="configForm" class="grid config-grid">
+        <label>Device ID<input name="device_id" type="text"></label>
+        <label>Site Name<input name="site_name" type="text"></label>
+        <label>Tank Name<input name="tank_name" type="text"></label>
+        <label>WiFi Mode
+          <select name="wifi_mode">
+            <option value="0">AP fallback only</option>
+            <option value="1">Station with AP recovery</option>
+          </select>
+        </label>
+        <label>WiFi SSID<input name="wifi_ssid" type="text"></label>
+        <label>WiFi Password<input name="wifi_password" type="password"></label>
+        <label>MQTT Enabled
+          <select name="mqtt_enabled">
+            <option value="0">Disabled</option>
+            <option value="1">Enabled</option>
+          </select>
+        </label>
+        <label>MQTT Host<input name="mqtt_host" type="text"></label>
+        <label>MQTT Port<input name="mqtt_port" type="number" min="1" max="65535"></label>
+        <label>MQTT Username<input name="mqtt_username" type="text"></label>
+        <label>MQTT Password<input name="mqtt_password" type="password"></label>
+        <label>Zero Level mm<input name="zero_level_mm" type="number" min="0" max="5000"></label>
+        <label>Bottom Start Level mm<input name="bottom_motor_start_level_mm" type="number" min="10" max="4000"></label>
+        <label>Top OFF Level mm<input name="top_motor_off_level_mm" type="number" min="20" max="4500"></label>
+        <label>Overflow Margin mm<input name="overflow_margin_mm" type="number" min="5" max="500"></label>
+        <label>Power Restore Wait min<input name="power_restore_wait_minutes" type="number" min="1" max="60"></label>
+        <label>Motor Rise Confirm min<input name="motor_start_confirm_minutes" type="number" min="1" max="60"></label>
+        <label>Motor OFF Confirm min<input name="motor_off_confirm_minutes" type="number" min="1" max="60"></label>
+        <label>Rise Confirm Delta mm<input name="water_rise_confirm_mm" type="number" min="3" max="500"></label>
+        <label>RF ON Pulse ms<input name="rf_on_pulse_ms" type="number" min="50" max="5000"></label>
+        <label>RF OFF Pulse ms<input name="rf_off_pulse_ms" type="number" min="50" max="5000"></label>
+        <label>RF Alarm Pulse ms<input name="rf_alarm_pulse_ms" type="number" min="50" max="5000"></label>
+        <label>RF ON Retries<input name="rf_on_max_retries" type="number" min="0" max="5"></label>
+        <label>RF OFF Retries<input name="rf_off_max_retries" type="number" min="0" max="5"></label>
+        <label>RF Retry Gap min<input name="rf_retry_gap_minutes" type="number" min="0" max="30"></label>
+        <label>Alarm Repeat
+          <select name="alarm_repeat_enable">
+            <option value="1">Enabled</option>
+            <option value="0">Disabled</option>
+          </select>
+        </label>
+        <label>Alarm Repeat min<input name="alarm_repeat_minutes" type="number" min="1" max="120"></label>
+        <label>Telemetry Interval sec<input name="telemetry_interval_seconds" type="number" min="5" max="3600"></label>
+        <label>RF ON Active High
+          <select name="rf_on_active_high"><option value="1">Yes</option><option value="0">No</option></select>
+        </label>
+        <label>RF OFF Active High
+          <select name="rf_off_active_high"><option value="1">Yes</option><option value="0">No</option></select>
+        </label>
+        <label>RF Alarm Active High
+          <select name="rf_alarm_active_high"><option value="1">Yes</option><option value="0">No</option></select>
+        </label>
+      </form>
+      <div class="button-row">
+        <button id="saveConfig" class="primary">Save Config</button>
+        <button id="setZero">Set Zero Level From Current Reading</button>
+        <button id="restartDevice">Restart</button>
+        <button id="factoryReset" class="danger">Factory Reset</button>
+      </div>
+      <p id="configMessage" class="message"></p>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <h2>OTA</h2>
+        <label>Cloud OTA URL<input id="otaUrl" type="text" placeholder="https://example.com/firmware.bin"></label>
+        <label>Target Version<input id="otaVersion" type="text" placeholder="JNX-TG-C3 v1.0.1"></label>
+        <label>Checksum<input id="otaChecksum" type="text" placeholder="optional"></label>
+        <div class="button-row">
+          <button id="queueCloudOta" class="primary">Queue Cloud OTA</button>
+        </div>
+        <hr>
+        <label>Local .bin Upload<input id="otaFile" type="file" accept=".bin,application/octet-stream"></label>
+        <div class="button-row">
+          <button id="uploadOta">Upload Firmware</button>
+        </div>
+        <p id="otaStatus" class="message"></p>
+      </article>
+      <article class="panel">
+        <h2>Logs</h2>
+        <div class="button-row">
+          <button id="loadLogs">Refresh Logs</button>
+          <button id="downloadCsv">Download CSV</button>
+        </div>
+        <pre id="logsBox" class="logs"></pre>
+      </article>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
+

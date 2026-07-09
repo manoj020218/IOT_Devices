@@ -1,0 +1,62 @@
+{
+  "telemetry": [
+    "tankLevelPct",
+    "tankLevelMm",
+    "flowLitresPerMin",
+    "wifiRssi",
+    "wifiSsidName",
+    "localIp",
+    "localUrl",
+    "wifiTxPowerDbm",
+    "pumpRunning",
+    "alarmState",
+    "sensorStatus",
+    "firmwareVersion"
+  ],
+  "commands": [
+    "refresh",
+    "zero_calibrate",
+    "apply_settings",
+    "motor_on",
+    "motor_off",
+    "alarm_test"
+  ],
+  "settings": {
+    "config": {
+      "capacityLitres": 1000,
+      "wifiTxPowerDbm": 8.5,
+      "zeroLevelMm": 0,
+      "bottomMotorStartLevelMm": 300,
+      "topMotorOffLevelMm": 900,
+      "overflowMarginMm": 30
+    },
+    "alarm": {
+      "repeatEnabled": true,
+      "repeatMinutes": 2,
+      "lowLevelPct": 20,
+      "notifyOnSensorFault": true
+    },
+    "actions": {
+      "powerRestoreWaitMinutes": 3,
+      "motorStartConfirmMinutes": 3,
+      "motorOffConfirmMinutes": 3,
+      "rfOnPulseMs": 500,
+      "rfOffPulseMs": 500,
+      "rfAlarmPulseMs": 500
+    }
+  },
+  "scenes": {
+    "telemetryTriggers": [
+      "tankLevelPct",
+      "pumpRunning",
+      "alarmState",
+      "sensorStatus"
+    ],
+    "actionCommands": [
+      "motor_on",
+      "motor_off",
+      "alarm_test",
+      "apply_settings"
+    ]
+  }
+}

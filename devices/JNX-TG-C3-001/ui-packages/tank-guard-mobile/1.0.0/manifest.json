@@ -1,0 +1,12 @@
+{
+  "packageId": "tank-guard-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/tank-guard-mobile/1.0.0/remoteEntry.js",
+  "exportName": "TankGuardDynamicPage",
+  "templateId": "tank-guard-mobile-v1",
+  "dynamicPages": ["tank-guard-mobile"],
+  "capabilities": {
+    "runtime": ["telemetry", "settings", "commands"],
+    "commands": ["refresh", "zero_calibrate", "apply_settings"]
+  }
+}
