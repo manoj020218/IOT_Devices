@@ -149,6 +149,7 @@ Device behavior:
 - `status` is published retained.
 - The device republishes `config` and `status` when MQTT reconnects.
 - Local automation continues even when MQTT is down.
+- Default broker endpoint is `mqtt.iotsoft.in:1883`; use this DNS host instead of a raw VPS IP so server moves do not require device-side broker changes.
 
 Supported command examples:
 

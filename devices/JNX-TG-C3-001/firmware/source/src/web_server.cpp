@@ -125,7 +125,7 @@ const char EMBEDDED_INDEX_HTML[] PROGMEM = R"HTML(
           <input id="wifi_tx_power_dbm_tenths" type="hidden">
         </label>
         <label>MQTT Enabled<select id="mqtt_enabled"><option value="0">Disabled</option><option value="1">Enabled</option></select></label>
-        <label>MQTT Host<input id="mqtt_host"></label>
+        <label>MQTT Host<input id="mqtt_host" placeholder="mqtt.iotsoft.in"></label>
         <label>MQTT Port<input id="mqtt_port" type="number"></label>
         <label>MQTT Username<input id="mqtt_username"></label>
         <label>MQTT Password<input id="mqtt_password" type="password" placeholder="Leave blank to keep current"></label>

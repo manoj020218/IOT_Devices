@@ -240,6 +240,20 @@ void copy_default_string(char *dest, size_t size, const char *value) {
   strlcpy(dest, value, size);
 }
 
+bool mqtt_host_matches(const char *value, const char *candidate) {
+  return strcmp(value, candidate) == 0;
+}
+
+void normalize_mqtt_endpoint(DeviceConfig &config) {
+  if (config.mqtt_host[0] == '\0' || mqtt_host_matches(config.mqtt_host, LEGACY_MQTT_HOST_IP) ||
+      mqtt_host_matches(config.mqtt_host, LEGACY_MQTT_HOST_WEB) ||
+      mqtt_host_matches(config.mqtt_host, LEGACY_MQTT_HOST_API) ||
+      mqtt_host_matches(config.mqtt_host, "localhost") ||
+      mqtt_host_matches(config.mqtt_host, "127.0.0.1")) {
+    copy_default_string(config.mqtt_host, sizeof(config.mqtt_host), DEFAULT_MQTT_HOST);
+  }
+}
+
 void copy_legacy_into_current(const LegacyDeviceConfigV1 &legacy, DeviceConfig &current) {
   current.zero_level_mm = legacy.zero_level_mm;
   current.bottom_motor_start_level_mm = legacy.bottom_motor_start_level_mm;
@@ -461,6 +475,7 @@ void config_manager_apply_defaults(DeviceConfig &config) {
   config.wifi_tx_power_dbm_tenths = DEFAULT_WIFI_TX_POWER_DBM_TENTHS;
   config.wifi_mode = TG_WIFI_MODE_AP_FALLBACK;
   config.mqtt_enabled = 0;
+  copy_default_string(config.mqtt_host, sizeof(config.mqtt_host), DEFAULT_MQTT_HOST);
   config.mqtt_port = DEFAULT_MQTT_PORT;
   config.rf_on_active_high = DEFAULT_RF_ON_ACTIVE_HIGH;
   config.rf_off_active_high = DEFAULT_RF_OFF_ACTIVE_HIGH;
@@ -546,6 +561,7 @@ bool config_manager_validate(DeviceConfig &config) {
   config.ui_password[sizeof(config.ui_password) - 1] = '\0';
   config.ota_url[sizeof(config.ota_url) - 1] = '\0';
   config.ota_channel[sizeof(config.ota_channel) - 1] = '\0';
+  normalize_mqtt_endpoint(config);
 
   if (config.device_id[0] == '\0') {
     copy_default_string(config.device_id, sizeof(config.device_id), DEFAULT_DEVICE_ID);

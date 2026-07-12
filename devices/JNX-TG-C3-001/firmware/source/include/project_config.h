@@ -88,6 +88,10 @@ constexpr char DEFAULT_DEVICE_ID[] = "tankguard-c3";
 constexpr char DEFAULT_SITE_NAME[] = "Default Site";
 constexpr char DEFAULT_TANK_NAME[] = "Main Tank";
 constexpr char DEFAULT_UI_PASSWORD[] = "Hanuman@2026";
+constexpr char DEFAULT_MQTT_HOST[] = "mqtt.iotsoft.in";
+constexpr char LEGACY_MQTT_HOST_IP[] = "154.61.69.200";
+constexpr char LEGACY_MQTT_HOST_WEB[] = "one.jenix.in";
+constexpr char LEGACY_MQTT_HOST_API[] = "backend.jenix.in";
 
 constexpr uint16_t DEFAULT_MQTT_PORT = 1883;
 
