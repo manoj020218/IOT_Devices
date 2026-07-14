@@ -1,0 +1,353 @@
+Below is a **ready Codex prompt** for your final hardware and firmware requirement.
+
+```text
+Project: JENIX Loud SOS Siren Firmware
+Target MCU: ESP32-C3 Super Mini
+Framework: Arduino ESP32 or ESP-IDF Arduino compatible
+Goal: Product-grade firmware for ESP32-C3 based 24V emergency horn siren controller using D4184 MOSFET trigger module.
+
+Final Hardware:
+- ESP32-C3 Super Mini
+- 24V–30V DC input supply
+- 24V/30V to 5V buck converter for ESP32
+- D4184 MOSFET trigger module
+- 8O 25W horn speaker connected via D4184 load output
+- ESP32 PWM GPIO connected to D4184 PWM+ input
+- ESP32 GND common with D4184 signal GND and supply negative
+- Manual push button input: one side to GPIO, other side to GND
+- Protection hardware external: fuse, TVS, 470µF 63V capacitor, 100nF ceramic capacitor
+
+Firmware must be professional product-grade and ready for field testing.
+
+Product Metadata:
+- Product Name: Jenix Loud SOS Siren
+- PID: PD-JNX-SOS-25W-C3
+- Product Category: Emergency Siren / Safety Alert
+- Firmware Name: jnx-sos-c3
+- Firmware Version: 1.0.0
+- AP SSID Prefix: JNX-SOS-
+- BLE Name Prefix: JNX-SOS-BLE-
+- mDNS hostname: jenix-sos.local
+
+Core Requirements:
+
+1. Tone generation
+Use ESP32-C3 LEDC PWM to generate siren tones on one output GPIO.
+Default PWM output GPIO should be configurable in code.
+Recommended default:
+- PWM_OUT_GPIO = GPIO4
+- BUTTON_GPIO = GPIO5
+
+Do not use blocking delay-based tone loops where possible.
+Use millis-based state machine for siren playback.
+
+2. Tone profiles
+Create 8 to 10 built-in siren profiles. Each profile must have:
+- id
+- name
+- description
+- frequency pattern
+- duty profile
+- recommended use
+- max safe duty
+- whether it is allowed for long duration
+
+Include at least these profiles:
+1. Police Siren
+2. Emergency Siren
+3. War Siren
+4. Danger Siren
+5. Fire Alarm
+6. Ambulance Siren
+7. Fast Hooter
+8. Slow Hooter
+9. SOS Pattern
+10. Continuous Alert Tone
+
+Suggested frequency ranges:
+- Safe base frequency range: 800Hz to 2500Hz
+- Horn best default: around 1800Hz to 2200Hz
+- Avoid ultrasonic or very low inefficient frequency
+
+3. Default selected profile
+Default selected profile: Emergency Siren.
+Selected tone profile must be stored in NVS/Preferences.
+After power cut and restart, last selected tone should remain selected.
+
+4. PWM power profile
+Implement selectable PWM duty/power profile.
+Because horn is driven from 24V–30V through D4184, firmware must limit duty cycle.
+
+Default safe settings:
+- Input voltage profile: 24V
+- Normal duty: 55%
+- Startup boost duty: 70%
+- Startup boost duration: 10 seconds
+- Long duration duty after boost: 55%
+- Max emergency duty allowed: 80% for 24V profile
+- For 30V profile: normal duty 40%, max duty 60%
+
+Create settings:
+- inputVoltageProfile: "24V" or "30V"
+- normalDutyPercent
+- boostDutyPercent
+- boostDurationSec
+- maxDutyPercent
+- onDurationSec default 180
+- restDurationSec default 30
+- longRunMode enabled by default
+
+If user changes settings, save to NVS.
+Provide “Restore Default Settings” button in Web UI.
+
+5. Long duration profile
+Implement automatic duty cycle:
+- Siren can play maximum 180 seconds continuously
+- Then rest/off for 30 seconds
+- Repeat if siren command remains active
+- This should protect horn from overheating
+
+6. Manual button
+One button connected between GPIO and GND.
+Use internal pull-up.
+Button actions:
+- Short press: start/stop selected siren
+- Long press 3 seconds: start SOS pattern
+- Very long press 10 seconds: reset Wi-Fi settings and restart AP mode
+Debounce properly.
+
+7. Web UI
+Create local web UI available at:
+- http://jenix-sos.local
+- fallback: device IP address
+
+Web UI must work in AP mode and Station mode.
+If connected to Wi-Fi router, same page must be accessible over router network using jenix-sos.local where possible.
+
+Web UI pages/sections:
+A. Dashboard
+- Device name
+- PID
+- Firmware version
+- Wi-Fi mode: AP / STA / AP+STA
+- IP address
+- Selected tone
+- Current siren state: OFF / PLAYING / RESTING
+- Remaining ON/rest time
+- PWM duty currently active
+- Button status
+
+B. Tone Test / Selection
+- Show all 10 tone profiles
+- Button: Play Test
+- Button: Stop
+- Button: Select This Tone
+- Selected profile must persist after power cut
+
+Important:
+Tone test should run for limited duration only, default 10 seconds, unless stopped manually.
+
+C. SOS Button
+- Large red SOS button
+- Pressing SOS should immediately play SOS tone/pattern
+- Stop button available
+
+D. PWM / Safety Settings
+- Input voltage profile selector: 24V / 30V
+- Normal duty %
+- Boost duty %
+- Boost duration seconds
+- ON duration seconds
+- Rest duration seconds
+- Max duty %
+- Save Settings
+- Restore Defaults
+
+E. Wi-Fi Settings
+- Scan Wi-Fi networks
+- Select SSID
+- Enter password
+- Save and reboot
+- If connection fails, fallback to AP mode
+- Device should support AP+STA mode where possible
+
+F. Firmware OTA Update
+- Standard web firmware upload section
+- User can browse .bin file and upload
+- Show upload progress
+- Reboot after successful update
+- Reject invalid upload if possible
+- Keep OTA route protected by a simple admin password setting
+
+G. System
+- Reboot button
+- Factory reset button with confirmation
+- Export settings JSON
+- Import settings JSON optional if easy
+
+8. AP mode
+If no Wi-Fi is configured or station connection fails:
+- Start AP mode
+- SSID: JNX-SOS-XXXX where XXXX is last 4 chars of MAC
+- AP password default: 12345678
+- Web UI available at 192.168.4.1 and jenix-sos.local if mDNS works
+
+9. BLE provisioning placeholder
+Set BLE advertised name:
+- JNX-SOS-BLE-XXXX
+Actual BLE provisioning can be minimal placeholder in this version.
+Code should be structured so BLE provisioning can be added later without rewriting.
+
+10. MQTT future provision
+No MQTT VPS connection required now.
+But code architecture must include placeholder files/classes:
+- MqttClientService
+- TelemetryService
+- DeviceState model
+These should compile even if MQTT disabled.
+Use a build-time flag:
+- ENABLE_MQTT false by default
+
+Future MQTT should be able to send:
+- online/offline
+- selected tone
+- siren state
+- button event
+- firmware version
+- uptime
+- IP address
+
+11. Safety and watchdog
+Implement:
+- Hardware watchdog / software watchdog friendly loop
+- No long blocking loops
+- Auto stop on invalid profile/settings
+- Duty limit clamping
+- Rest cycle enforcement
+- Brownout-safe NVS writes: avoid writing repeatedly
+- Save settings only when changed
+
+12. Code quality
+- Modular code
+- Each file should be under 200 lines where practical
+- Clear comments
+- Constants in config file
+- Separate files for:
+  - main firmware entry
+  - web server routes
+  - tone engine
+  - tone profiles
+  - settings manager
+  - Wi-Fi manager
+  - OTA manager
+  - button manager
+  - device metadata
+  - MQTT placeholder
+  - HTML/CSS/JS assets
+
+13. Suggested folder structure
+
+/src
+  main.cpp
+  config/ProductConfig.h
+  config/PinConfig.h
+  models/DeviceState.h
+  models/ToneProfile.h
+  services/ToneEngine.h
+  services/ToneEngine.cpp
+  services/ToneProfiles.h
+  services/ToneProfiles.cpp
+  services/SettingsManager.h
+  services/SettingsManager.cpp
+  services/WifiManagerService.h
+  services/WifiManagerService.cpp
+  services/WebServerService.h
+  services/WebServerService.cpp
+  services/OtaService.h
+  services/OtaService.cpp
+  services/ButtonService.h
+  services/ButtonService.cpp
+  services/MqttClientService.h
+  services/MqttClientService.cpp
+  services/TelemetryService.h
+  services/TelemetryService.cpp
+  web/WebAssets.h
+
+14. Tone engine details
+Use LEDC PWM.
+ESP32-C3 LEDC:
+- Use one channel
+- Use suitable resolution
+- Function setTone(frequencyHz, dutyPercent)
+- Function stopTone()
+- Tone patterns should be state-machine driven.
+
+Example profiles:
+- Continuous Alert: constant 2000Hz
+- Fast Hooter: alternate 1600Hz / 2200Hz every 200ms
+- Slow Hooter: sweep 800Hz to 2200Hz over 2 seconds
+- Police Siren: sweep up/down 700Hz to 1800Hz
+- Emergency Siren: sweep 1200Hz to 2400Hz fast
+- War Siren: slow rising/falling 500Hz to 1800Hz
+- Danger Siren: pulse 2000Hz ON/OFF pattern
+- Fire Alarm: repeated 1000Hz/1800Hz
+- Ambulance: 900Hz/1400Hz alternating
+- SOS: 3 short, 3 long, 3 short using selected tone frequency
+
+15. Web UI styling
+Make UI modern and mobile-first.
+Use simple embedded HTML/CSS/JS.
+No external CDN dependency.
+Use cards, large buttons, status badges.
+Use red for SOS/emergency button.
+Web UI should be usable from mobile phone.
+
+16. API endpoints
+Create REST endpoints:
+GET /api/status
+GET /api/profiles
+POST /api/select-profile
+POST /api/test-profile
+POST /api/stop
+POST /api/sos
+GET /api/settings
+POST /api/settings
+POST /api/settings/default
+GET /api/wifi/scan
+POST /api/wifi/save
+POST /api/reboot
+POST /api/factory-reset
+POST /update for OTA upload
+
+17. Testing requirement
+Before final answer, self-check:
+- Code compiles for ESP32-C3 target
+- No missing include
+- No file over 200 lines unless unavoidable
+- Web UI loads in AP mode
+- NVS stores selected profile
+- Manual button works
+- OTA route exists
+- Tone test auto stops
+- Long run 180s ON / 30s REST works
+- Duty is clamped for 24V/30V profile
+
+18. Important electrical assumptions to document in README
+- D4184 PWM input signal accepts ESP32 3.3V logic. If module does not trigger reliably, add transistor/gate-driver buffer.
+- ESP32 GND must be common with D4184 signal GND and power negative.
+- Horn must be connected only to D4184 load terminals.
+- Do not connect horn directly to ESP32.
+- Use fuse, TVS, capacitor, and proper enclosure.
+- 30V input profile must use lower duty than 24V profile.
+- This firmware controls effective power by PWM duty, not true voltage reduction.
+
+Deliverables:
+- Full PlatformIO project preferred
+- README with wiring
+- Default configuration clearly documented
+- Build and upload instructions
+- All source files complete
+- Mention exact pins and how to change them
+```
+
+One important hardware note for Codex/firmware testing: **D4184 module must accept 3.3V PWM reliably**. If bench test ??? D4184 weak trigger ???, then ESP32 GPIO ?? D4184 PWM input ?? ??? **small NPN transistor buffer or MOSFET gate driver** add ???? ??????.

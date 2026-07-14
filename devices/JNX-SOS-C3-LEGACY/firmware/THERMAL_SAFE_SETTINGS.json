@@ -1,0 +1,14 @@
+{
+  "selectedProfileId": 2,
+  "inputVoltageProfile": "24V",
+  "normalDutyPercent": 35,
+  "boostDutyPercent": 45,
+  "boostDurationSec": 2,
+  "maxDutyPercent": 50,
+  "onDurationSec": 45,
+  "restDurationSec": 60,
+  "longRunMode": true,
+  "wifiSsid": "",
+  "wifiPassword": "",
+  "otaAdminPassword": "admin123"
+}
