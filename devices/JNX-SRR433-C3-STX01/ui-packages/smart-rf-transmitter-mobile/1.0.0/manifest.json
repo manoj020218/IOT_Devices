@@ -1,0 +1,12 @@
+{
+  "packageId": "smart-rf-transmitter-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/smart-rf-transmitter-mobile/1.0.0/remoteEntry.js",
+  "exportName": "SmartRfTransmitterDynamicPage",
+  "templateId": "smart-rf-transmitter-mobile-v1",
+  "dynamicPages": ["smart-rf-transmitter-mobile"],
+  "capabilities": {
+    "runtime": ["telemetry", "commands"],
+    "commands": ["refresh"]
+  }
+}

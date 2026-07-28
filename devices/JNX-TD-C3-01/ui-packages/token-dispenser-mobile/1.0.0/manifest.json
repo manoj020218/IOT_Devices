@@ -1,0 +1,12 @@
+{
+  "packageId": "token-dispenser-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/token-dispenser-mobile/1.0.0/remoteEntry.js",
+  "exportName": "TokenDispenserDynamicPage",
+  "templateId": "token-dispenser-mobile-v1",
+  "dynamicPages": ["token-dispenser-mobile"],
+  "capabilities": {
+    "runtime": ["telemetry", "commands"],
+    "commands": ["refresh"]
+  }
+}

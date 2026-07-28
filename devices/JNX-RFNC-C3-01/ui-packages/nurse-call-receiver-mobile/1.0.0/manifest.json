@@ -1,0 +1,12 @@
+{
+  "packageId": "nurse-call-receiver-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/nurse-call-receiver-mobile/1.0.0/remoteEntry.js",
+  "exportName": "NurseCallReceiverDynamicPage",
+  "templateId": "nurse-call-receiver-mobile-v1",
+  "dynamicPages": ["nurse-call-receiver-mobile"],
+  "capabilities": {
+    "runtime": ["telemetry", "commands"],
+    "commands": ["refresh", "restart", "start_learning"]
+  }
+}

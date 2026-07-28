@@ -1,0 +1,12 @@
+{
+  "packageId": "p10-display-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/p10-display-mobile/1.0.0/remoteEntry.js",
+  "exportName": "P10DisplayDynamicPage",
+  "templateId": "p10-display-mobile-v1",
+  "dynamicPages": ["p10-display-mobile"],
+  "capabilities": {
+    "runtime": ["telemetry", "commands"],
+    "commands": ["refresh"]
+  }
+}
