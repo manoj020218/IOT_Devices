@@ -1,0 +1,15 @@
+{
+  "packageId": "qrunlock-mobile",
+  "version": "1.0.0",
+  "entryPath": "/ui-packages/qrunlock-mobile/1.0.0/remoteEntry.js",
+  "exportName": "QrunlockApp",
+  "templateId": "qrunlock-product-package-v1",
+  "dynamicPages": [],
+  "capabilities": {
+    "runtime": [
+      "session",
+      "home"
+    ],
+    "commands": []
+  }
+}
